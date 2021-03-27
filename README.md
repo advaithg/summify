@@ -4,6 +4,14 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
+### ADDED
+
+### npm start-flask
+to run the flask
+
+### npm start-full
+to run the app in development mode along with the flask 
+
 In the project directory, you can run:
 
 ### `npm start`

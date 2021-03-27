@@ -8,7 +8,7 @@ export default class App extends React.Component {
 
     this.state={
       value: '',
-      summaryText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+      summaryText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -21,9 +21,15 @@ export default class App extends React.Component {
   
   handleSubmit(event) {
     alert('An essay was submitted: ' + this.state.value);
+    fetch('/time').then(res => res.json()).then(data => {
+      this.setState({summaryText: data.summary});
+    }).catch(error=>{
+      console.log(error);
+    });
+
     event.preventDefault();
   }
-  
+
   render(){
     return (
       <div className="App">
