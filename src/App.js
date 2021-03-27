@@ -8,12 +8,38 @@ export default class App extends React.Component {
 
     this.state={
       value: '',
-      summaryText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      summaryText: '',
       isLoading: false
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.sendText = this.sendText.bind(this);
+
+    this.fileInput = React.createRef();
+
+  }
+
+
+//requests.post("http://localhost:5000", data=text)
+
+  sendText(text){
+    fetch('/text', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({text:text})
+    }).then(response => {
+      this.setState({isLoading: false})
+      return response.json()
+    })
+    .then(data => {
+      this.setState({summaryText: data.text})
+    }).catch(error=>console.log(error));
+
+    this.setState({summaryText: '', isLoading: true});
   }
 
   handleChange(event) {
@@ -21,15 +47,26 @@ export default class App extends React.Component {
   }
   
   handleSubmit(event) {
+    if(this.fileInput.current.files.length !== 0){
+      let fileText = ""
+      console.log(this.fileInput.current.files[0]);
+      const fileReader = new FileReader();
+      fileReader.onload = event => {
+        fileText=event.target.result;
+        console.log(fileText);
+        this.sendText(fileText)
+      }
+      fileReader.onerror = error => PromiseRejectionEvent(error);
+      fileReader.readAsText(this.fileInput.current.files[0]);
+      document.getElementById("fileAdded").value = "";
+    }
+    else if (this.state.value !== ''){
+      this.sendText(this.state.value)
+    }
+    else {
+      // Tell user to input something
+    }
     window.scrollTo(0, document.body.scrollHeight);
-    fetch('/time').then(res => res.json()).then(data => {
-      this.setState({summaryText: data.summary});
-      this.setState({isLoading: false});
-    }).catch(error=>{
-      console.log(error);
-    });
-    this.setState({isLoading: true});
-
     event.preventDefault();
   }
 
@@ -51,7 +88,16 @@ export default class App extends React.Component {
               onChange={this.handleChange}
               placeholder = "Paste text to be summarized here."
             />
+            
+            OR
+
+            <label className="FileUpload">
+              Upload a .txt file
+              <input id="fileAdded" type="file" accept = ".txt" ref={this.fileInput} />
+            </label>
+
             <button className="Button" onClick={this.handleSubmit}>Submit</button>
+
             {this.state.isLoading &&
             <section>
               <img src={logo} className="AppLogo" alt="logo" style={{marginTop: "100px"}} />
