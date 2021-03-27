@@ -23,7 +23,7 @@ export default class App extends React.Component {
     alert('An essay was submitted: ' + this.state.value);
     event.preventDefault();
   }
-  
+
   render(){
     return (
       <div className="App">
