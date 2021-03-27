@@ -9,6 +9,7 @@ export default class App extends React.Component {
     this.state={
       value: '',
       summaryText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      isLoading: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -23,9 +24,11 @@ export default class App extends React.Component {
     alert('An essay was submitted: ' + this.state.value);
     fetch('/time').then(res => res.json()).then(data => {
       this.setState({summaryText: data.summary});
+      this.setState({isLoading: false});
     }).catch(error=>{
       console.log(error);
     });
+    this.setState({isLoading: true});
 
     event.preventDefault();
   }
@@ -48,6 +51,11 @@ export default class App extends React.Component {
             placeholder = "Paste text to be summarized here."
           />
           <button className="Button" onClick={this.handleSubmit}>Submit</button>
+          {this.state.isLoading &&
+          <section>
+            <img src={logo} className="AppLogo" alt="logo" />
+          </section>
+          }
           {this.state.summaryText !== '' &&
           <section className="Summary">
             <h4 style={{textAlign:"left"}}>Summary:</h4>
