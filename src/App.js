@@ -9,7 +9,8 @@ export default class App extends React.Component {
     this.state={
       value: '',
       summaryText: '',
-      isLoading: false
+      isLoading: false,
+      errorText: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -17,11 +18,7 @@ export default class App extends React.Component {
     this.sendText = this.sendText.bind(this);
 
     this.fileInput = React.createRef();
-
   }
-
-
-//requests.post("http://localhost:5000", data=text)
 
   sendText(text){
     fetch('/text', {
@@ -47,6 +44,7 @@ export default class App extends React.Component {
   }
   
   handleSubmit(event) {
+    this.setState({errorText: ''});
     if(this.fileInput.current.files.length !== 0){
       let fileText = ""
       console.log(this.fileInput.current.files[0]);
@@ -64,6 +62,7 @@ export default class App extends React.Component {
       this.sendText(this.state.value)
     }
     else {
+      this.setState({errorText: 'Please enter text or upload a file'});
       // Tell user to input something
     }
     window.scrollTo(0, document.body.scrollHeight);
@@ -76,7 +75,7 @@ export default class App extends React.Component {
         <div className="App">
           <header className="AppHeader">
             <img src={logo} className="AppLogo" alt="logo" />
-            <h1>Title of Project Here</h1>
+            <h1>Summify</h1>
           </header>
           <section className="AppBody">
             <p>
@@ -95,6 +94,10 @@ export default class App extends React.Component {
               Upload a .txt file
               <input id="fileAdded" type="file" accept = ".txt" ref={this.fileInput} />
             </label>
+
+            <div>
+              {this.state.errorText}
+            </div>
 
             <button className="Button" onClick={this.handleSubmit}>Submit</button>
 
