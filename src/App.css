@@ -1,14 +1,21 @@
-.App {
+.Background {
   padding: 10vh;
+  background-color: #1A1A1D;
+  min-height: 100vh;
+}
+
+.App {
   text-align: center;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  background-color: #282c34;
+  font-family: 'Poppins', sans-serif;
+  animation: fadeIn ease 2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
 }
 
 .AppLogo {
-  height: 25vmin;
+  height: 15vmin;
   pointer-events: none;
 }
 
@@ -17,7 +24,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(15px + 2vmin);
   color: white;
 }
 
@@ -27,16 +34,19 @@
   flex-direction: column;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: lightgray;
   gap: 2vh;
 }
 
 .TextArea {
-  height: 40vh;
-  width: 60vw;
+  margin-top: 40px;
+  height: 35vh;
+  width: 45vw;
   max-width:90vw;
   min-width: 30vw;
   min-height: 20vh;
+  font-family: 'Poppins', sans-serif;
+  padding: 5px;
 }
 
 .Button {
@@ -55,4 +65,20 @@
   background-color: #302e35;
   margin-top: 0;
   padding: 0 30px 30px 30px;
+  animation: fadeIn ease 1.5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+   }
+}
+
+html {
+  scroll-behavior: smooth;
 }
