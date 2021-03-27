@@ -50,3 +50,9 @@
   background-color: cyan;
   transition-duration: 0.4s;
 }
+
+.Summary{
+  background-color: #302e35;
+  margin-top: 0;
+  padding: 0 30px 30px 30px;
+}

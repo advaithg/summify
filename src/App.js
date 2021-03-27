@@ -7,7 +7,8 @@ export default class App extends React.Component {
     super(props);
 
     this.state={
-      value: ''
+      value: '',
+      summaryText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -41,6 +42,12 @@ export default class App extends React.Component {
             placeholder = "Paste text to be summarized here."
           />
           <button className="Button" onClick={this.handleSubmit}>Submit</button>
+          {this.state.summaryText !== '' &&
+          <section className="Summary">
+            <h4 style={{textAlign:"left"}}>Summary:</h4>
+            <p style={{fontSize: "large"}}>{this.state.summaryText}</p>
+          </section>
+          }
         </section>
       </div>
     );
