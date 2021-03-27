@@ -12,7 +12,7 @@ CORS(app)
 def get_summary():
     text = request.get_json()
     #text = summarize(text)
-    #time.sleep(3)
+    time.sleep(3)
     return text
 
 @app.route('/sources', methods=['GET'])
