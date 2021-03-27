@@ -7,7 +7,7 @@ export default class App extends React.Component {
     super(props);
 
     this.state={
-      value: 'Paste text to be summarized here.'
+      value: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -26,18 +26,22 @@ export default class App extends React.Component {
   render(){
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+        <header className="AppHeader">
+          <img src={logo} className="AppLogo" alt="logo" />
           <h1>Title of Project Here</h1>
+        </header>
+        <section className="AppBody">
           <p>
             Summarize long lectures by copying and pasting the transcript in the textbox below!
           </p>
           <textarea 
+            className = "TextArea"
             value={this.state.value} 
             onChange={this.handleChange}
+            placeholder = "Paste text to be summarized here."
           />
-          <button onClick={this.handleSubmit}>submit</button>
-        </header>
+          <button className="Button" onClick={this.handleSubmit}>Submit</button>
+        </section>
       </div>
     );
   }
