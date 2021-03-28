@@ -1,4 +1,4 @@
-# LA Hacks Project
+# Summify
 
 Summify is a website that simplifies your lecture transcripts into an easy-to-read summary, finds sources based on keywords from the lecture, and provides review questions based on the content!
 
