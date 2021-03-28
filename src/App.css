@@ -139,6 +139,10 @@ html {
   box-shadow: 5px 5px 10px black;
 }
 
+.keywordList li a:link{
+  color: white;
+}
+
 .questions {
   margin-left: 70px;
   margin-right: 100px;
@@ -153,6 +157,7 @@ html {
   padding-top: 2px;
   margin-bottom:10px;
   border-radius: 25px;
+  margin-right: 100px;
   box-shadow: 3px 3px 5px black;
 }
 
@@ -168,4 +173,12 @@ html {
   display: block;
   width: 95vw;
   text-align: right;
+}
+
+a:visited{
+  color: white;
+}
+
+a:link{
+  color: #6fa1f7;
 }

@@ -16,7 +16,9 @@ export default class App extends React.Component {
       keywords: [],
       keywordLinks: [],
       questions: '',
-      questionDisplay: []
+      questionDisplay: [],
+      fileUploaded: false,
+      submitClicked: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -132,6 +134,12 @@ export default class App extends React.Component {
   
   handleSubmit(event) {
     this.setState({errorText: ''});
+    this.setState({fileUploaded: false});
+    this.setState({submitClicked: true});
+    this.setState({summaryText: ''});
+    this.setState({questions: ''});
+    this.setState({questionDisplay: []});
+
     if(this.fileInput.current.files.length !== 0){
       let fileText = ""
       const fileReader = new FileReader();
@@ -139,12 +147,18 @@ export default class App extends React.Component {
         fileText=event.target.result;
         if(fileText.length>100000) 
         {
-          this.setState({errorText: "Your file is too long!"});
+          this.setState({errorText: "Your file is too long! (100000 characters maximum)"});
+          document.getElementById("fileAdded").value = "";
+          return;
+        }
+        else if(fileText.length<60)
+        {
+          this.setState({errorText: "Your file is too short! (60 characters minimum)"});
           document.getElementById("fileAdded").value = "";
           return;
         }
         this.sendText(fileText); 
-        
+        this.setState({fileUploaded: true});
       }
       fileReader.onerror = error => PromiseRejectionEvent(error);
       fileReader.readAsText(this.fileInput.current.files[0]);
@@ -187,7 +201,8 @@ export default class App extends React.Component {
 
             <label className="FileUpload">
               Upload a .txt file <input id="fileAdded" type="file" accept = ".txt" ref={this.fileInput} />
-              {this.state.errorText === "" && this.fileInput.current !== null &&
+              { this.state.fileUploaded &&
+              //(this.state.errorText === "" && this.fileInput.current !== null) &&
               <img src={checkmark} className="AppLogo" alt="checkmark" style={{height:"20px"}} />
               }
             </label>
@@ -257,6 +272,11 @@ export default class App extends React.Component {
                 No questions found!
               </div>
               }
+            </div>
+            }
+            {this.state.summaryText === '' && this.state.submitClicked && !this.state.isLoading &&
+            <div>
+              No summary formed
             </div>
             }
           </section>
