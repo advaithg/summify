@@ -48,7 +48,7 @@ Figuring how to apply the technologies for text summarization into the website w
 We managed to create a working back-end and front-end with most of the members having no prior experience. We also managed to add features beyond our original plan of just text summarization, including keywords and sources with a question generator as well.
 
 ## What we learned
-We learned a lot about natural language processing, integrating front-end and back-end, effectively using CSS, React, and Flask. 
+We learned a lot about natural language processing, integrating front-end and back-end, effectively using CSS, React, and Flask. Some hadn't used Flask before, and some hadn't used React before, and none of us had used them together, so we learned whichever skills were new as well as the integration of the two together.
 
 ## What's next for Summify
 We hope to build our own models using NLP to enable our features instead of using existing APIs/models, or at least train pre-existing models with our own data. We also hope to add a video upload option as well.
