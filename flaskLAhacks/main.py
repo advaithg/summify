@@ -8,12 +8,10 @@ from summarizer import Summarizer
 import moviepy.editor as mp
 from keywordtracker import get_keywords
 from questiongenerator import get_questions
-#from questiongenerator import export_questions
 
 app = Flask(__name__)
 CORS(app)
 model = Summarizer()
-print(model)
 
 @app.route('/')
 def index():

@@ -190,7 +190,7 @@ export default class App extends React.Component {
         <div className="App">
           <header className="AppHeader">
             <img src={logo} className="AppLogo" alt="logo" />
-            <h1 style={{color: "#6fa1f7"}}>Summify</h1>
+            <h1 style={{color: "#6fa1f7", paddingLeft: "30px"}}>Summify</h1>
           </header>
           <section className="AppBody">
             <p>
@@ -201,7 +201,7 @@ export default class App extends React.Component {
               type = "text"
               value={this.state.fieldOfStudy} 
               onChange={this.handleStudyFieldChange}
-              placeholder = "Field of Study"
+              placeholder = "Field of Study (optional)"
               style={{minHeight: "20px", height: "20px"}}
             />
             <textarea 
