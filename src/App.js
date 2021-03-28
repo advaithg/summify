@@ -74,6 +74,8 @@ export default class App extends React.Component {
         </li>
       );
 
+      distracters.sort();
+
       ///// Block for each question
       var questionBlock = (
         <li key={question.index}>
