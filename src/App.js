@@ -18,16 +18,23 @@ export default class App extends React.Component {
       questions: '',
       questionDisplay: [],
       fileUploaded: false,
-      submitClicked: false
+      submitClicked: false,
+      fieldOfStudy: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.sendText = this.sendText.bind(this);
     this.processQuestions = this.processQuestions.bind(this);
+    this.renderGoogleLink = this.renderGoogleLink.bind(this);
+    this.handleStudyFieldChange = this.handleStudyFieldChange.bind(this);
 
     this.fileInput = React.createRef();
     this.loadingRef = React.createRef();
+  }
+
+  handleStudyFieldChange(event){
+    this.setState({fieldOfStudy: event.target.value});
   }
 
   // Pass an object with 'key' and 'name'
@@ -36,7 +43,7 @@ export default class App extends React.Component {
       <li key={keyAndName.key}>
         <a 
           className="Button HyperlinkButton" 
-          href={`https://www.google.com/search?q=${keyAndName.name}`}
+          href={`https://www.google.com/search?q=${this.state.fieldOfStudy}%20${keyAndName.name}`}
           target="_blank"
           rel = "noreferrer"
         >
@@ -189,6 +196,14 @@ export default class App extends React.Component {
             <p>
               Summarize long lectures by copying and pasting the transcript in the textbox below!
             </p>
+            <input 
+              className = "TextArea"
+              type = "text"
+              value={this.state.fieldOfStudy} 
+              onChange={this.handleStudyFieldChange}
+              placeholder = "Field of Study"
+              style={{minHeight: "20px", height: "20px"}}
+            />
             <textarea 
               className = "TextArea"
               value={this.state.value} 
