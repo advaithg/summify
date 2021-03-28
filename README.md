@@ -1,5 +1,7 @@
 # LA Hacks Project
 
+Summify is a website that simplifies your lecture transcripts into an easy-to-read summary, finds sources based on keywords from the lecture, and provides review questions based on the content!
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Locally hosting Summify
