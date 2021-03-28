@@ -69,14 +69,15 @@
 
 .Summary{
   background-color: #302e35;
-  margin-top: 0;
+  margin-top: 20px;
   margin-left: 50px;
   margin-right: 50px;
-  padding: 0 30px 50px 50px;
+  padding: 20px 30px 50px 30px;
   animation: fadeIn ease 1.5s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
   border-radius: 25px;
+  box-shadow: 3px 3px 5px black;
 }
 
 @keyframes fadeIn {
@@ -107,4 +108,64 @@
 
 input[type="file"] {
   display: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.HyperlinkButton {
+  display: block;
+  text-decoration: none;
+  color: white;
+  width: 100%;
+}
+
+.keywordList{
+  list-style-type:none;
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;  
+  max-width: 90vw; 
+  gap: 10px;
+}
+
+.keywordList li{
+  align-items: center;
+  text-align: center;
+  background-color: #337af5;
+  margin: 4px;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 5px 5px 10px black;
+}
+
+.questions {
+  margin-left: 70px;
+  margin-right: 100px;
+  list-style-position: inside;
+}
+
+.questions li{
+  font-size: large;
+  color: white;
+  background-color: #302e35;
+  padding-left: 20px;
+  padding-top: 2px;
+  margin-bottom:10px;
+  border-radius: 25px;
+  box-shadow: 3px 3px 5px black;
+}
+
+.answers{
+  font-size: medium;
+  color: lightgray;
+}
+
+.creds{
+  font-size: small;
+  padding-right: 20px;
+  margin-bottom: 30px;
+  display: block;
+  width: 95vw;
+  text-align: right;
 }

@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 import loading from './loading.gif';
+import checkmark from './checkmark.svg';
 
 export default class App extends React.Component {
   constructor(props){
@@ -13,33 +14,83 @@ export default class App extends React.Component {
       isLoading: false,
       errorText: '',
       keywords: [],
-      keywordLinks: []
+      keywordLinks: [],
+      questions: '',
+      questionDisplay: []
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.sendText = this.sendText.bind(this);
+    this.processQuestions = this.processQuestions.bind(this);
 
     this.fileInput = React.createRef();
+    this.loadingRef = React.createRef();
   }
 
   // Pass an object with 'key' and 'name'
   renderGoogleLink(keyAndName){
     return (
       <li key={keyAndName.key}>
-        {/*<button onClick ={window.location.href = `https://www.google.com/search?q=${keyAndName.name}`}>*/}
-
         <a 
-          className="Button" 
+          className="Button HyperlinkButton" 
           href={`https://www.google.com/search?q=${keyAndName.name}`}
           target="_blank"
           rel = "noreferrer"
         >
           {keyAndName.name}
         </a>
-        {/*</button>*/}
       </li>
     );
+  }
+
+  processQuestions(questions){
+    console.log(questions);
+    var questionListArray = [];
+    for (var question of questions){
+      let distracters = [];
+      let i = 0;
+
+      //// Options
+      for(; i < question.Distracters.length; i++){
+        distracters.push(
+          <li key={i}>
+            {question.Distracters[i]}
+          </li>
+        );
+      }
+      distracters.push(
+        <li key={i}>
+          {question.CorrectAnswer}
+        </li>
+      );
+
+      ///// Block for each question
+      var questionBlock = (
+        <li key={question.index}>
+          {/* Question */}
+          <p>{question.QuestionPrompt}</p><br />
+          {question.QuestionType === "MULTIPLE_CHOICE" &&
+          /* Container for options */
+          <ol>{distracters}</ol>
+          }
+          <br />
+
+          {/* Answer */}
+          <section className="answers">
+          Answer: <br />
+          {question.CorrectAnswer === true && "true"}
+          {question.CorrectAnswer === false && "false"}
+          {question.CorrectAnswer}
+          </section>
+          <br />
+        </li>
+      );
+
+      questionListArray.push(questionBlock);
+    }
+
+    this.setState({questionDisplay: questionListArray});
   }
 
   sendText(text){
@@ -55,8 +106,11 @@ export default class App extends React.Component {
       return response.json()
     })
     .then(data => {
-      this.setState({summaryText: data.text});
-      this.setState({keywords: data.keywords});
+      this.setState({
+        summaryText: data.text, 
+        keywords: data.keywords,
+        questions: data.questions
+      });
 
       var links = [];
       for(let i = 0; i < this.state.keywords.length; i++){
@@ -64,6 +118,8 @@ export default class App extends React.Component {
       }
 
       this.setState({keywordLinks: links});
+
+      this.processQuestions(this.state.questions);
       
     }).catch(error=>console.log(error));
 
@@ -78,11 +134,17 @@ export default class App extends React.Component {
     this.setState({errorText: ''});
     if(this.fileInput.current.files.length !== 0){
       let fileText = ""
-      console.log(this.fileInput.current.files[0]);
       const fileReader = new FileReader();
       fileReader.onload = event => {
         fileText=event.target.result;
-        this.sendText(fileText)
+        if(fileText.length>100000) 
+        {
+          this.setState({errorText: "Your file is too long!"});
+          document.getElementById("fileAdded").value = "";
+          return;
+        }
+        this.sendText(fileText); 
+        
       }
       fileReader.onerror = error => PromiseRejectionEvent(error);
       fileReader.readAsText(this.fileInput.current.files[0]);
@@ -95,7 +157,9 @@ export default class App extends React.Component {
       this.setState({errorText: 'Please enter text or upload a file'});
       // Tell user to input something
     }
-    window.scrollTo(0, document.body.scrollHeight);
+    
+    //this.loadingRef.current.scrollIntoView(false);
+    //window.scrollTo(0, document.body.scrollHeight);
     event.preventDefault();
   }
 
@@ -116,40 +180,85 @@ export default class App extends React.Component {
               value={this.state.value} 
               onChange={this.handleChange}
               placeholder = "Paste text to be summarized here."
+              maxLength= "100000"
             />
             
-            OR
+            <section style={{color: "#6fa1f7"}}> OR </section>
 
             <label className="FileUpload">
-              Upload a .txt file
-              <input id="fileAdded" type="file" accept = ".txt" ref={this.fileInput} />
+              Upload a .txt file <input id="fileAdded" type="file" accept = ".txt" ref={this.fileInput} />
+              {this.state.errorText === "" && this.fileInput.current !== null &&
+              <img src={checkmark} className="AppLogo" alt="checkmark" style={{height:"20px"}} />
+              }
             </label>
-
             <div>
               {this.state.errorText}
             </div>
+            
 
             <button className="Button" onClick={this.handleSubmit}>Submit</button>
-
+            {/* This link element is here to perform css on, as the real links
+                don't show up until after the summary is generated 
+            <a 
+              href = "http://www.google.com"
+              className="Button HyperlinkButton" 
+              target="_blank"
+              rel = "noreferrer"
+            >
+              a link
+            </a>*/}
             {this.state.isLoading &&
             <section>
-              <img src={loading} className="AppLogo" alt="loading" style={{marginTop: "100px"}} />
+              <img 
+                src={loading} 
+                className="AppLogo" 
+                alt="loading" 
+                id="loadingAnim"
+                style={{marginTop: "3px", height: "80px" }} 
+                ref={this.loadingRef}
+              />
             </section>
             }
-            {this.state.summaryText !== '' &&
+            {this.state.summaryText !== '' && 
             <div>
-              <section className="Summary">
+              <section className="Summary" id="summary">
                 <h4 style={{textAlign:"left"}}>Summary:</h4>
-                <p style={{fontSize: "large"}}>{this.state.summaryText}</p>
-                {this.state.keywords}
+                <p style={{fontSize: "large", textAlign: "justify"}}>{this.state.summaryText}</p>
+              </section>
+              <div className="creds"> Text Summarizer provided by <a href="https://pypi.org/project/bert-extractive-summarizer/"  target="_blank" rel="noreferrer">
+                  bert-extractive-summarizer
+                </a>
+              </div>
+              <section style={{textAlign: "left", fontSize: "large"}}>
+                Keep scrolling for keywords and links, along with questions from your transcript!
               </section>
               <section>
-                Keywords:
-                <ul style={{listStyleType: "none"}}>{this.state.keywordLinks}</ul>
-              </section>          
+                <h4 style={{textAlign: "left"}}>Keywords:</h4>
+                <ul className = "keywordList" style={{listStyleType: "none"}}>{this.state.keywordLinks}</ul>
+              </section>  
+              <div className="creds"> Keyword Extracter provided by <a href="https://www.cortical.io/free-tools/"  target="_blank" rel="noreferrer">
+                  cortical.io
+                </a>
+              </div>
+              {this.state.questionDisplay.length !== 0 &&
+              <section style={{textAlign: "left"}}>
+                <h4>Questions:</h4>
+                <ol className="questions">{this.state.questionDisplay}</ol>
+              </section>   
+              }     
+              {this.state.questionDisplay.length !== 0 &&
+              <div className="creds"> Question Generator provided by <a href="http://deepquiz.com.s3-website-us-east-1.amazonaws.com/"  target="_blank" rel="noreferrer">
+                  DeepQuiz
+                </a>
+              </div>
+              }
+              {this.state.questionDisplay.length === 0 &&
+              <div style={{textAlign: "left"}}>
+                No questions found!
+              </div>
+              }
             </div>
             }
-  
           </section>
         </div>
       </div>

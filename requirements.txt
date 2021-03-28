@@ -1,7 +1,4 @@
 flask
 python-dotenv
-beautifulsoup4
-google
 bert-extractive-summarizer
 torch
-moviepy
