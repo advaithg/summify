@@ -15,6 +15,10 @@ CORS(app)
 model = Summarizer()
 print(model)
 
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
 @app.route('/text', methods = ['POST'])
 def get_summary():
     text = request.get_json()['text']
