@@ -6,7 +6,6 @@ from flask_cors import CORS
 from summarizer import Summarizer
 import moviepy.editor as mp
 from keywordtracker import get_keywords
-import json
 
 app = Flask(__name__)
 CORS(app)
