@@ -56,29 +56,31 @@ export default class App extends React.Component {
   processQuestions(questions){
     console.log(questions);
     var questionListArray = [];
+
+    if(questions.length > 25)
+      questions.length = 25;
+
     for (var question of questions){
       let distracters = [];
       let i = 0;
 
+      let arr = [];
+      arr = question.Distracters.slice(0, question.Distracters.length);
+      arr.push(question.CorrectAnswer);
+      arr.sort();
+
       //// Options
-      for(; i < question.Distracters.length; i++){
+      for(; i < arr.length; i++){
         distracters.push(
           <li key={i}>
-            {question.Distracters[i]}
+            {arr[i]}
           </li>
         );
       }
-      distracters.push(
-        <li key={i}>
-          {question.CorrectAnswer}
-        </li>
-      );
-
-      distracters.sort();
 
       ///// Block for each question
       var questionBlock = (
-        <li key={question.index}>
+        <li key={question.QuestionPrompt}>
           {/* Question */}
           <p>{question.QuestionPrompt}</p><br />
           {question.QuestionType === "MULTIPLE_CHOICE" &&
@@ -228,7 +230,7 @@ export default class App extends React.Component {
             </div>
             
 
-            <button className="Button" onClick={this.handleSubmit}>Submit</button>
+            <button className="Button" onClick={this.handleSubmit} style={{marginTop: "30px"}}>Submit</button>
             {/* This link element is here to perform css on, as the real links
                 don't show up until after the summary is generated 
             <a 
