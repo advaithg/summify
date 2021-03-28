@@ -1,16 +1,19 @@
 import logo from './logo.svg';
 import './App.css';
 import React from 'react';
+import loading from './loading.gif';
 
 export default class App extends React.Component {
   constructor(props){
     super(props);
 
     this.state={
-      value: '',
-      summaryText: '',
+      value: "",
+      summaryText: "",
       isLoading: false,
-      errorText: ''
+      errorText: '',
+      keywords: [],
+      keywordLinks: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -20,12 +23,31 @@ export default class App extends React.Component {
     this.fileInput = React.createRef();
   }
 
+  // Pass an object with 'key' and 'name'
+  renderGoogleLink(keyAndName){
+    return (
+      <li key={keyAndName.key}>
+        {/*<button onClick ={window.location.href = `https://www.google.com/search?q=${keyAndName.name}`}>*/}
+
+        <a 
+          className="Button" 
+          href={`https://www.google.com/search?q=${keyAndName.name}`}
+          target="_blank"
+          rel = "noreferrer"
+        >
+          {keyAndName.name}
+        </a>
+        {/*</button>*/}
+      </li>
+    );
+  }
+
   sendText(text){
     fetch('/text', {
       method: 'POST',
       mode: 'cors',
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": 'application/json'
       },
       body: JSON.stringify({text:text})
     }).then(response => {
@@ -33,7 +55,16 @@ export default class App extends React.Component {
       return response.json()
     })
     .then(data => {
-      this.setState({summaryText: data.text})
+      this.setState({summaryText: data.text});
+      this.setState({keywords: data.keywords});
+
+      var links = [];
+      for(let i = 0; i < this.state.keywords.length; i++){
+        links.push(this.renderGoogleLink({key: i, name: this.state.keywords[i]}));
+      }
+
+      this.setState({keywordLinks: links});
+      
     }).catch(error=>console.log(error));
 
     this.setState({summaryText: '', isLoading: true});
@@ -51,14 +82,13 @@ export default class App extends React.Component {
       const fileReader = new FileReader();
       fileReader.onload = event => {
         fileText=event.target.result;
-        console.log(fileText);
         this.sendText(fileText)
       }
       fileReader.onerror = error => PromiseRejectionEvent(error);
       fileReader.readAsText(this.fileInput.current.files[0]);
       document.getElementById("fileAdded").value = "";
     }
-    else if (this.state.value !== ''){
+    else if (this.state.value !== ""){
       this.sendText(this.state.value)
     }
     else {
@@ -75,7 +105,7 @@ export default class App extends React.Component {
         <div className="App">
           <header className="AppHeader">
             <img src={logo} className="AppLogo" alt="logo" />
-            <h1 style={{color: "blue"}}>Summify</h1>
+            <h1 style={{color: "#6fa1f7"}}>Summify</h1>
           </header>
           <section className="AppBody">
             <p>
@@ -103,15 +133,23 @@ export default class App extends React.Component {
 
             {this.state.isLoading &&
             <section>
-              <img src={logo} className="AppLogo" alt="logo" style={{marginTop: "100px"}} />
+              <img src={loading} className="AppLogo" alt="loading" style={{marginTop: "100px"}} />
             </section>
             }
             {this.state.summaryText !== '' &&
-            <section className="Summary">
-              <h4 style={{textAlign:"left"}}>Summary:</h4>
-              <p style={{fontSize: "large"}}>{this.state.summaryText}</p>
-            </section>
+            <div>
+              <section className="Summary">
+                <h4 style={{textAlign:"left"}}>Summary:</h4>
+                <p style={{fontSize: "large"}}>{this.state.summaryText}</p>
+                {this.state.keywords}
+              </section>
+              <section>
+                Keywords:
+                <ul style={{listStyleType: "none"}}>{this.state.keywordLinks}</ul>
+              </section>          
+            </div>
             }
+  
           </section>
         </div>
       </div>
